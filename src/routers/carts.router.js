@@ -7,7 +7,7 @@ const controller = new CartController();
 
 router.get('/:cid', async (req, res) => {
   try {
-    const {cart, products} = await controller.getCartById(req.params.cid);
+    const {cart, products} = await controller.findById(req.params.cid);
     if (!cart) {
       return res.status(404).json({ error: 'Carrito no encontrado' });
     }
@@ -16,17 +16,17 @@ router.get('/:cid', async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Error al cargar el carrito' });
   }
-}); // YA ESTA
+});
 
 router.delete('/:cid/products/:pid', async (req, res) => {
   try {
-    const result = await controller.deleteProductFromCart(req.params.cid, req.params.pid);
+    const result = await controller.deleteProduct(req.params.cid, req.params.pid);
     res.status(result.status).json({ message: result.message });
   } catch (error) {
     console.error(error);
     res.status(error.status || 500).json({ message: error.message || 'Error interno del servidor' });
   }
-}); // REVISAR
+});
 
 
 router.put('/:cid', async (req, res) => {
@@ -40,7 +40,7 @@ router.put('/:cid', async (req, res) => {
     console.error(error);
     res.status(error.status || 500).json({ message: error.message || 'Error al actualizar el carrito' });
   }
-}); //REVISAR
+});
 
 router.put('/:cid/products/:pid', async (req, res) => {
   const cartId = req.params.cid;
@@ -54,7 +54,7 @@ router.put('/:cid/products/:pid', async (req, res) => {
     console.error(error);
     res.status(error.status || 500).json({ message: error.message || 'Error interno del servidor' });
   }
-}); //REVISAR
+});
 
 router.delete('/:cid', async (req, res) => {
   const cartId = req.params.cid;
@@ -66,7 +66,7 @@ router.delete('/:cid', async (req, res) => {
     console.error(error);
     res.status(error.status || 500).json({ message: error.message || 'Error interno del servidor' });
   }
-}); //REVISAR
+});
 
 
 

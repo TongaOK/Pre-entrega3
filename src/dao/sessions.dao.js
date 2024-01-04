@@ -1,6 +1,6 @@
 import passport from "passport";
 
-class UserDAO {
+ class UserDAO {
   async getProfile(req, res) {
     try {
       if (!req.session.user) {
@@ -14,9 +14,11 @@ class UserDAO {
     }
   }
 
-  async getLogin(req, res) {
+   getLogin = async (req, res) => {
     try {
-      if (req.session.user) {
+      console.log("REQ:", req)
+      console.log("RES:", res)
+      if (req.session && req.session.user) {
         return res.redirect("/api/sessions/profile");
       }
       res.render("login", { title: "Login" });
@@ -94,5 +96,5 @@ class UserDAO {
   }
 }
 
-export default new UserDAO();
 
+export default new UserDAO();

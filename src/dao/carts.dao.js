@@ -23,7 +23,7 @@ class CartDAO {
       }
 
       const productIndex = cart.products.findIndex(
-        (product) => product.product.toString() === pid
+        (product) => product.id.toString() === pid
       );
       if (productIndex === -1) {
         throw { status: 404, message: 'Producto no encontrado en el carrito' };
@@ -64,7 +64,7 @@ class CartDAO {
       }
 
       const product = cart.products.find(
-        (product) => product.product.toString() === productId
+        (product) => product.id.toString() === productId
       );
 
       if (!product) {

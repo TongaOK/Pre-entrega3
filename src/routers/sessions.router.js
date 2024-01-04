@@ -5,6 +5,7 @@ const router = Router();
 
 // En tu enrutador
 const controller = new UserController();
+console.log(UserController);
 
 router.get("/profile", (req, res) => controller.getProfile(req, res));
 router.get("/login", (req, res) => controller.getLogin(req, res));

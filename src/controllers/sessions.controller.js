@@ -1,62 +1,43 @@
-import passport from "passport";
+
+import UserDAO from "../dao/sessions.dao.js"
 
 export default class UserController {
-    async getProfile(req, res) {
-        if (!req.session.user) {
-          return res.redirect("/api/sessions/login");
-        }
-        console.log(req.session.user);
-        res.render("profile", { title: "Profile", user: req.session.user });
+       getProfile = (req, res) => {
+        return  UserDAO.getProfile(req, res);
       }
     
       // Función para manejar el endpoint GET /login
-    async getLogin(req, res) {
-        if (req.session.user) {
-          return res.redirect("/api/sessions/profile");
-        }
-        res.render("login", { title: "Login" });
+       getLogin =  (req, res) => {
+        return  UserDAO.getLogin(req, res);
       }
     
       // Función para manejar el endpoint GET /register
-    async getRegister(req, res) {
-        if (req.session.user) {
-          return res.redirect("/api/sessions/profile");
-        }
-        res.render("register", { title: "Register" });
+       getRegister =  (req, res) => {
+        return  UserDAO.getRegister(req, res);
       }
     
       // Función para manejar el endpoint POST /register
-    async postRegister(req, res, next) {
-        passport.authenticate('register', { failureRedirect: '/register' })(req, res, async () => {
-          res.redirect('/api/sessions/login');
-        });
+       postRegister =  (req, res, next) => {
+        return  UserDAO.postRegister(req, res, next);
       }
     
       // Función para manejar el endpoint POST /login
-    async postLogin(req, res, next) {
-        passport.authenticate('login', { failureRedirect: '/login' })(req, res, async () => {
-          req.session.user = req.user;
-          res.redirect('/api/sessions/profile');
-        });
+       postLogin =  (req, res, next) => {
+        return  UserDAO.postLogin(req, res, next);
       }
     
       // Función para manejar el endpoint GET /logout
-    async getLogout(req, res) {
-        req.session.destroy((error) => {
-          res.redirect("/api/sessions/login");
-        });
+       getLogout =  (req, res) => {
+        return  UserDAO.getLogout(req, res);
       }
     
       // Función para manejar el endpoint GET /github
-    async getGitHub(req, res, next) {
-        passport.authenticate("github", { scope: ["user:email"] })(req, res, next);
+       getGitHub =  (req, res, next) => {
+        return  UserDAO.getGitHub(req, res, next);
       }
     
       // Función para manejar el endpoint GET /github/callback
-    async getGitHubCallback(req, res, next) {
-        passport.authenticate("github", { failureRedirect: "/login" })(req, res, async () => {
-          req.session.user = req.user;
-          res.redirect('/');
-        });
+       getGitHubCallback =  (req, res, next) => {
+        return UserDAO.getGitHubCallback(req, res, next);
       }
 }

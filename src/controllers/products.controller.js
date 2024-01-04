@@ -1,40 +1,26 @@
-import ProductModel from "../models/product.model.js";
-
+import ProductsDao from "../dao/products.dao.js";
 export default class ProductController {
-    async getAllProducts(req, res) {
-        const products = await ProductModel.find();
-        res.json(products);
+    getAllProducts = (req, res) => {
+        return ProductsDao.getAllProducts(req, res)
     }
 
-    async getByPage(req, res) {
-        const { page = 1, limit = 10, group, sort } = req.query; // sort: asc | desc
-        const opts = { page, limit, sort: { price: sort || "asc" } };
-        const criteria = {};
-        if (group) {
-          criteria.group = group;
-        }
-        const result = await ProductModel.paginate(criteria, opts);
-        return {result, group, sort}
+    getByPage = (req, res) => {
+        return ProductsDao.getByPage(req, res)
     }
 
-    async getProductById(req, res) {
-        const product = await ProductModel.findById(req.params.id);
-        res.json(product);
+    getProductById = (req, res) => {
+        return ProductsDao.getProductById(req, res)
     }
 
-    async createProduct(req, res) {
-        const product = new ProductModel(req.body);
-        await product.save();
-        res.json(product);
+    createProduct = (req, res) => {
+        return ProductsDao.createProduct(req, res)
     }
 
-    async updateProduct(req, res) {
-        const product = await ProductModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.json(product);
+    updateProduct(req, res) {
+        return ProductsDao.updateProduct(req, res)
     }
 
-    async deleteProduct(req, res) {
-        await ProductModel.findByIdAndDelete(req.params.id);
-        res.json({ message: 'Product deleted successfully' });
-    }
+    deleteProduct(req, res) {
+    return ProductsDao.deleteProduct(req, res)
+}
 }

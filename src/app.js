@@ -57,10 +57,10 @@ app.use("/api/carts", cartsRouter);
 // app.use("/api/realtimeproducts", RTPRouter);
 app.use("/api/sessions", sessionsRouter);
 
-app.use((error, req, res, next) => {
-  const message = `Ah ocurrido un error inesperado ${error.message}`
-  console.log(message);
-  res.status(500).json({ status: 'error', message });
-})
+// app.use((error, req, res, next) => {
+//   const message = `Ah ocurrido un error inesperado ${error.message}`
+//   console.log(message);
+//   res.status(500).json({ status: 'error', message });
+// })
 
 export default app;

@@ -60,7 +60,7 @@ export const init = () => {
 
 export const githubStrategyInit = () => {
     passport.use('github', new GitHubStrategy(githubOpts, async (accessToken, refreshToken, profile, done) => {
-        console.log('profile', profile);
+        // console.log('profile', profile);
         let email = profile._json.email;
         let user = await UserModel.findOne({ email });
         if (user) {

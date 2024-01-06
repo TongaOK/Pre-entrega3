@@ -43,7 +43,7 @@ import passport from "passport";
   async postRegister(req, res, next) {
     try {
       passport.authenticate('register', { failureRedirect: '/register' })(req, res, async () => {
-        res.redirect('/api/sessions/login');
+         res.redirect('/api/sessions/login');
       });
     } catch (error) {
       console.error(error);
@@ -84,15 +84,24 @@ import passport from "passport";
   }
 
   async getGitHubCallback(req, res, next) {
-    try {
-      passport.authenticate("github", { failureRedirect: "/login" })(req, res, async () => {
-        req.session.user = req.user;
+    passport.authenticate("github", { failureRedirect: "/login" }, async (err, user) => {
+      try {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+  
+        if (!user) {
+          return res.redirect('/login'); // Otra redirección en caso de falla
+        }
+  
+        req.session.user = user;
         res.redirect('/');
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Error interno del servidor' });
-    }
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+    })(req, res, next);
   }
 }
 

@@ -1,9 +1,16 @@
 import { Router } from "express";
 import ProductController from "../controllers/products.controller.js";
+// import {
+//   privateRouter,
+//   publicRouter,
+//   authPolicies
+// } from "../middlewares/sessions.validator.js"
 /*import ProductModel from "../models/product.model.js";*/
 
 const router = Router();
 const controller = new ProductController();
+
+router.get
 
 router.get("/", async (req, res) => {
 

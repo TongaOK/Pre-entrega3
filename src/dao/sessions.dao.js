@@ -5,7 +5,7 @@ import passport from "passport";
    return user;
   }
 
-   getLogin = async (user) => {
+  getLogin = async (user) => {
     return user;
   }
 

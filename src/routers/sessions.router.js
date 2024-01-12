@@ -8,20 +8,19 @@ const router = Router();
 const controller = new UserController();
 console.log(UserController);
 
-router.get("/profile", (req, res) => {
-  controller.getProfile(req, res);
+router.get("/profile", async (req, res) => {
   try {
     const user = req.session.user;
     if (!user) {
       return res.redirect("/api/sessions/login");
     }
-    const profile = controller.getProfile(user);
+    const profile = await controller.getProfile(user);
     res.render("profile", { title: "Profile", user: profile });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Error interno del servidor" });
   }
-});
+}); //REVISAR CONTROLLER
 
 router.get("/login", (req, res) => {
   try {
@@ -66,14 +65,65 @@ router.post("/login", (req, res, next) => {
         req.session.user = req.user;
         res.redirect('/api/sessions/profile');
       });
-});
+}); //REVISAR CONTROLLER
 
-router.get("/logout", (req, res) => controller.getLogout(req, res));
+router.get("/logout", (req, res) => {
+  //controller.getLogout(req, res)
+  try {
+    req.session.destroy((error) => {
+      res.redirect("/api/sessions/login");
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
+}); //REVISAR CONTROLLER
 
-router.get("/github", (req, res, next) => controller.getGitHub(req, res, next));
+router.get("/github", (req, res, next) => {
+    //controller.getGitHub(req, res, next)
+    try {
+      passport.authenticate("github", { scope: ["user:email"] })(req, res, next);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Error interno del servidor' });
+    }
+}); //REVISAR CONTROLLER
 
-router.get("/github/callback", (req, res, next) =>
-  controller.getGitHubCallback(req, res, next)
-);
+router.get("/github/callback", (req, res, next) =>{
+    //controller.getGitHubCallback(req, res, next)
+    passport.authenticate("github", { failureRedirect: "/login" }, async (err, user) => {
+      try {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+  
+        if (!user) {
+          return res.redirect('/login');
+        }
+  
+        req.session.user = user;
+        res.redirect('/');
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Error interno del servidor' });
+      }
+    })(req, res, next);
+}); //REVISAR CONTROLLER
+
+router.get("/current", async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.redirect("/api/sessions/login");
+    }
+    const profile = await controller.getProfile(user);
+    console.log(profile);
+    res.send({ user: profile });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Error interno del servidor" });
+  }
+})
 
 export default router;
